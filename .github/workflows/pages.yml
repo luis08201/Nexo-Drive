@@ -24,6 +24,7 @@ jobs:
         run: |
           node --check dist/assets/app.js
           node --check dist/assets/i18n.js
+          node scripts/check_routes.cjs
           python3 scripts/check_assets.py
       - name: Configure Pages
         uses: actions/configure-pages@v5
