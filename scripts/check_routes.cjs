@@ -45,3 +45,21 @@ for(const [hash,en,es] of [['#public/Home','Home | Nexo Drive','Inicio | Nexo Dr
  open(hash);run("siteLanguage='en'");assert.equal(title(),en);run("siteLanguage='es'");assert.equal(title(),es);
 }
 console.log('PASS: About course destination, FAQ deep link/focus, unique social status IDs and bilingual page/course titles');
+// Compact public menu: state, dismissal, focus and desktop reset.
+const menuEvents={},windowEvents={};let menuOpen=false,menuExpanded='false',menuFocus=false;
+const toggle={setAttribute(name,value){if(name==='aria-expanded')menuExpanded=value},focus(){menuFocus=true}};
+const bar={classList:{toggle(name,value){menuOpen=value},contains(){return menuOpen}},querySelector(){return toggle},contains(target){return target.inside===true}};
+bar.classList.contains=()=>menuOpen;
+context.document.querySelector=selector=>selector==='.sitebar.is-menu-open'?(menuOpen?bar:null):bar;
+context.document.addEventListener=(name,fn)=>menuEvents[name]=fn;
+context.window.addEventListener=(name,fn)=>windowEvents[name]=fn;
+run(source.slice(source.indexOf('function setSiteMenu('),source.indexOf('function render(){')));
+run('setSiteMenu(true)');assert(menuOpen);assert.equal(menuExpanded,'true');
+menuEvents.click({target:{inside:true,closest:()=>null}});assert(menuOpen,'clicking toggle must not dismiss menu');
+menuEvents.click({target:{inside:true,closest:()=>({})}});assert(!menuOpen,'route selection closes menu');
+run('setSiteMenu(true)');menuEvents.click({target:{inside:false,closest:()=>null}});assert(!menuOpen);
+run('setSiteMenu(true)');let prevented=false;menuEvents.keydown({key:'Escape',preventDefault(){prevented=true}});assert(!menuOpen&&menuFocus&&prevented);
+run('setSiteMenu(true)');context.window.innerWidth=1440;windowEvents.resize();assert(!menuOpen);assert.equal(menuExpanded,'false');
+assert(source.includes('aria-controls="public-navigation" aria-expanded="false"'));
+assert(fs.readFileSync('dist/index.html','utf8').includes('@media(max-width:64rem)'));
+console.log('PASS: compact menu toggle, link/outside/Escape dismissal, focus restoration and desktop resize reset');
