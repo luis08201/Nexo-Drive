@@ -286,15 +286,12 @@ function initFleetMotion(){
   const visual=document.createElement('div');visual.className='fleet-expanding-visual';visual.setAttribute('aria-hidden','true');
   const image=document.createElement('img');image.src=source.src;image.alt='';image.style.objectPosition=getComputedStyle(source).objectPosition;visual.appendChild(image);section.appendChild(visual);
   const measure=()=>{const r=source.getBoundingClientRect(),base=section.getBoundingClientRect();return {left:r.left-base.left,top:r.top-base.top,width:r.width,height:r.height}};
-  const compactHeight=()=>{const style=getComputedStyle(section);return Math.ceil(mosaic.getBoundingClientRect().height+(parseFloat(style.paddingTop)||0)+(parseFloat(style.paddingBottom)||0))};
-  const viewportHeight=()=>Math.max(compact?compactHeight():0,Math.round(window.visualViewport?.height||document.documentElement.clientHeight||innerHeight));
+  // ScrollTrigger owns the pinned section's dimensions. Animate only its children.
+  const sceneHeight=()=>section.clientHeight;
   const copy=section.querySelector('.fleet-mosaic-copy');
-  const timeline=gsap.timeline({scrollTrigger:{trigger:section,start:'top top',end:()=>'+='+viewportHeight(),pin:true,pinSpacing:true,scrub:.35,invalidateOnRefresh:true,anticipatePin:1,onRefresh:self=>{
-   // The section grows during the pin; reserve its final height so the next section cannot overlap.
-   if(compact&&section.parentElement?.classList.contains('pin-spacer'))section.parentElement.style.height=(viewportHeight()+Math.max(0,self.end-self.start))+'px';
-  }}});
-  if(compact)timeline.fromTo(section,{height:compactHeight},{height:viewportHeight,ease:'power2.inOut',duration:1},0);
-  timeline.fromTo(visual,{left:()=>measure().left,top:()=>measure().top,width:()=>measure().width,height:()=>measure().height,borderRadius:'1.25rem'},{left:0,top:0,width:()=>section.clientWidth,height:()=>compact?viewportHeight():section.clientHeight,borderRadius:0,ease:'power2.inOut',duration:1},0)
+  const timeline=gsap.timeline({scrollTrigger:{trigger:section,start:'top top',end:()=>'+='+sceneHeight(),pin:true,pinSpacing:true,scrub:.35,invalidateOnRefresh:true,anticipatePin:1}});
+  if(compact)timeline.fromTo(copy,{y:0},{y:()=>Math.max(0,sceneHeight()-mosaic.offsetTop-copy.offsetTop-copy.offsetHeight-(parseFloat(getComputedStyle(section).paddingBottom)||0)),ease:'power2.inOut',duration:1},0);
+  timeline.fromTo(visual,{left:()=>measure().left,top:()=>measure().top,width:()=>measure().width,height:()=>measure().height,borderRadius:'1.25rem'},{left:0,top:0,width:()=>section.clientWidth,height:sceneHeight,borderRadius:0,ease:'power2.inOut',duration:1},0)
   .to(columns.slice(0,3),{x:()=>-section.clientWidth*.3,ease:'power2.inOut',duration:1},0)
   .to(columns.slice(4),{x:()=>section.clientWidth*.4,ease:'power2.inOut',duration:1},0)
   .to(visual,{'--fleet-shade':1,duration:.5},.35)
