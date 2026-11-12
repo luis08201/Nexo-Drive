@@ -63,3 +63,5 @@ run('setSiteMenu(true)');context.window.innerWidth=1440;windowEvents.resize();as
 assert(source.includes('aria-controls="public-navigation" aria-expanded="false"'));
 assert(fs.readFileSync('dist/index.html','utf8').includes('@media(max-width:64rem)'));
 console.log('PASS: compact menu toggle, link/outside/Escape dismissal, focus restoration and desktop resize reset');
+
+require('./check_fleet_motion.cjs');
