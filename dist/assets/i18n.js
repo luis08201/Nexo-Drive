@@ -65,7 +65,12 @@ function localizeSite(root=document.body){
   if(current!==result)node.nodeValue=result;
  }
  document.documentElement.lang=siteLanguage;
- document.title=siteLanguage==='en'?'Nexo Drive · Driving school':'Nexo Drive · Escuela de manejo';
+ const routeTitles={Home:['Home','Inicio'],About:['About','Nosotros'],Contact:['Contact','Contacto'],Cursos:['Courses','Cursos'],'Mapa general':['Home','Inicio'],'Detalle de curso':['Course details','Detalle de curso'],Blog:['Blog','Blog'],'Blog post':['Blog article','Artículo del blog'],'Blog categories':['Blog categories','Categorías del blog'],'Search results':['Search results','Resultados de búsqueda'],'404':['Page not found','Página no encontrada'],'Coming soon':['Coming soon','Próximamente'],Login:['Sign in','Acceso'],'Recuperar contraseña':['Forgot password','Recuperar contraseña']};
+ const currentPage=typeof page==='string'?page:'Home';
+ let title=routeTitles[currentPage]?.[siteLanguage==='en'?0:1]||translateSiteText(currentPage);
+ if(typeof mode==='string'&&mode==='public'&&currentPage==='Detalle de curso')title=translateSiteText(selectedCourse())+' · '+title;
+ if(typeof mode==='string'&&mode!=='public')title=translateSiteText(names[mode])+' · '+title;
+ document.title=title+' | Nexo Drive';
  document.querySelectorAll('[data-language-selector]').forEach(select=>{select.value=siteLanguage});
 }
 function setSiteLanguage(language){
@@ -77,3 +82,4 @@ function setSiteLanguage(language){
  if(typeof initIntroReveal==='function')initIntroReveal();
  if(typeof ScrollTrigger!=='undefined')requestAnimationFrame(()=>ScrollTrigger.refresh());
 }
+

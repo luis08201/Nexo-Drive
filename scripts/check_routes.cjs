@@ -29,3 +29,19 @@ open('#public/Cursos');const cards=run('courseCards()');for(const slug of Object
 open('#public/Detalle%20de%20curso?course=missing');assert.equal(run('page'),'404');
 open('#public/%E0%A4');assert.equal(run('page'),'404');
 console.log(`PASS: ${checked} independent course/profile URLs, list links, deterministic legacy links and invalid-ID handling`);
+
+// Public navigation fixes, direct FAQ entry and localized document titles.
+open('#public/About');assert(run('publicPage()').includes('href="#public/Cursos"><button>Conoce nuestros cursos'));
+assert(run('siteFooter()').includes('href="#public/Contact?section=faq"'));
+let scrolled=false,focused=false;
+context.requestAnimationFrame=callback=>callback();
+context.document.getElementById=id=>id==='faq'?{scrollIntoView(){scrolled=true},focus(){focused=true}}:el;
+open('#public/Contact?section=faq');assert(scrolled&&focused,'direct FAQ route must scroll and focus');
+const contactHtml=run('publicPage()+siteFooter()');
+for(const id of ['contact-social-status','footer-social-status'])assert.equal((contactHtml.match(new RegExp('id="'+id+'"','g'))||[]).length,1);
+context.document.documentElement={};context.emptyText={nodeType:3,nodeValue:'',parentElement:{closest:()=>false}};
+const title=()=>run('localizeSite(emptyText);document.title');
+for(const [hash,en,es] of [['#public/Home','Home | Nexo Drive','Inicio | Nexo Drive'],['#public/About','About | Nexo Drive','Nosotros | Nexo Drive'],['#public/Contact','Contact | Nexo Drive','Contacto | Nexo Drive'],['#public/Cursos','Courses | Nexo Drive','Cursos | Nexo Drive'],['#public/Detalle%20de%20curso?course=motorcycles','Motorcycles · Course details | Nexo Drive','Motocicletas · Detalle de curso | Nexo Drive']]){
+ open(hash);run("siteLanguage='en'");assert.equal(title(),en);run("siteLanguage='es'");assert.equal(title(),es);
+}
+console.log('PASS: About course destination, FAQ deep link/focus, unique social status IDs and bilingual page/course titles');
