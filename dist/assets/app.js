@@ -282,7 +282,7 @@ function initFleetMotion(){
   const columns=[...section.querySelectorAll('.fleet-column')];
   const source=section.querySelector('.fleet-center img');
   const visual=document.createElement('div');visual.className='fleet-expanding-visual';visual.setAttribute('aria-hidden','true');
-  const image=document.createElement('img');image.src=source.src;image.alt='';visual.appendChild(image);section.appendChild(visual);
+  const image=document.createElement('img');image.src=source.src;image.alt='';image.style.objectPosition=getComputedStyle(source).objectPosition;visual.appendChild(image);section.appendChild(visual);
   const measure=()=>{const r=source.getBoundingClientRect(),base=section.getBoundingClientRect();return {left:r.left-base.left,top:r.top-base.top,width:r.width,height:r.height}};
   const copy=section.querySelector('.fleet-mosaic-copy');
   const timeline=gsap.timeline({scrollTrigger:{trigger:section,start:'top top',end:()=>'+='+Math.round(innerHeight),pin:true,pinSpacing:true,scrub:.35,invalidateOnRefresh:true,anticipatePin:1}});
