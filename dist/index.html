@@ -257,8 +257,8 @@ body:not(.portal-mode) .home-hero{width:100vw;margin-left:calc(50% - 50vw);paddi
 
 /* Compact fleet scene: keep the caption in bounds while the image fills the viewport. */
 @media(max-width:64rem){
- .fleet-mosaic-section{display:grid;place-items:center;height:100svh;min-height:0;padding:1.25rem 1rem;margin-bottom:0}
- .fleet-mosaic{width:100%;height:min(100%,34rem);min-width:0;min-height:0;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:minmax(0,1fr) auto;gap:.75rem;align-content:stretch}
+ .fleet-mosaic-section{display:grid;align-items:start;justify-items:center;height:auto;min-height:0;padding:1.25rem 1rem;margin-bottom:0}
+ .fleet-mosaic{width:100%;height:auto;min-width:0;min-height:0;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:min(24rem,65vw,55svh) auto;gap:.75rem;align-content:stretch}
  .fleet-mosaic>.fleet-column:nth-child(n){display:flex;min-width:0;min-height:0;padding:0;gap:.625rem;grid-row:1;grid-column:auto}
  .fleet-mosaic>.fleet-edge{padding-top:2rem;padding-bottom:2rem}
  .fleet-mosaic>.fleet-stack{padding-top:1rem;padding-bottom:1rem}
@@ -274,7 +274,7 @@ body:not(.portal-mode) .home-hero{width:100vw;margin-left:calc(50% - 50vw);paddi
 /* Five compact columns preserve eleven photos on phones. */
 @media(max-width:40rem){
  .fleet-mosaic-section{padding:1rem .625rem}
- .fleet-mosaic{height:min(100%,28rem);grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2.6fr) minmax(0,1fr) minmax(0,1fr);gap:.375rem}
+ .fleet-mosaic{height:auto;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2.6fr) minmax(0,1fr) minmax(0,1fr);gap:.375rem}
  .fleet-mosaic>.fleet-column{gap:.375rem}
  .fleet-mosaic>.fleet-tall:nth-child(n){display:none}
  .fleet-mosaic>.fleet-edge:nth-child(1){grid-column:1}
@@ -285,12 +285,9 @@ body:not(.portal-mode) .home-hero{width:100vw;margin-left:calc(50% - 50vw);paddi
  .fleet-mosaic>.fleet-column img{border-radius:.625rem}
 }
 @media(max-width:64rem) and (prefers-reduced-motion:reduce){
- .fleet-mosaic-section{height:auto}
- .fleet-mosaic{height:auto;grid-template-rows:auto auto;min-height:0}
- .fleet-mosaic>.fleet-column{height:clamp(16rem,55svh,30rem)}
- .fleet-mosaic>.fleet-column img{height:0;flex:1 1 0}
+ .fleet-mosaic-section,.fleet-mosaic{height:auto;min-height:0}
 }
 
 </style>
 <div class="workspace"><aside><div class="brand"><span class="nexo-logo"><svg class="nexo-mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 26V7c0-1.8 2.3-2.5 3.3-1L23.7 26c1 1.5 3.3.8 3.3-1V6" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="m8 23 16-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 4"/></svg><span class="nexo-name">Nexo <span>Drive</span></span></span></div><nav id="nav"></nav></aside><main><div class="top"><span>ESCUELA DE MANEJO <span style="color:#aaa">/ Arquitectura y recorridos</span></span><span class="pill">VISTA DE DISEÑO</span></div><div class="canvas" id="app"></div></main></div>
-<script src="./assets/i18n.js?v=tablet-menu-1"></script><script src="./assets/vendor/gsap.min.js"></script><script src="./assets/vendor/ScrollTrigger.min.js"></script><script src="./assets/vendor/Flip.min.js"></script><script src="./assets/app.js?v=fleet-balanced-1"></script></body></html>
+<script src="./assets/i18n.js?v=tablet-menu-1"></script><script src="./assets/vendor/gsap.min.js"></script><script src="./assets/vendor/ScrollTrigger.min.js"></script><script src="./assets/vendor/Flip.min.js"></script><script src="./assets/app.js?v=fleet-adaptive-height-1"></script></body></html>
